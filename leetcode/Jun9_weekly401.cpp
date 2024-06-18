@@ -30,3 +30,20 @@ public:
 };
 
 // question2
+#define mod 1000000007
+class Solution
+{
+public:
+    int valueAfterKSeconds(int n, int k)
+    {
+        vector<int> pref(n, 1);
+        for (int i = 1; i <= k; i++)
+        {
+            for (int j = 1; j < n; j++)
+            {
+                pref[j] = (pref[j] + pref[j - 1]) % mod;
+            }
+        }
+        return pref[n - 1];
+    }
+};
