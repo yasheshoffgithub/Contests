@@ -10,5 +10,4 @@ int main()
         cout << "YES";
     else
         cout << "NO";
-    // return 0;
 }
