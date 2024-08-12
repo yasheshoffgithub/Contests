@@ -50,3 +50,92 @@ public:
         return ans;
     }
 };
+
+//question 3
+class Solution {
+public:
+    int dp[2001][51][51];
+long helper(int i, vector<int>& nums, int s, int e) {
+    if (i == nums.size()) {
+        return 1;
+    }
+
+    if(dp[i][s][e]!=-1){
+
+       return dp[i][s][e];
+    }
+ 
+    long ans = 0;
+    int j = s;
+    int k = min(e, nums[i]);
+    while (j <= 50 && k >= 0) {
+        int sum = j + k;
+        if (sum == nums[i]) {
+            ans = (ans + helper(i + 1, nums, j, k)) % 1000000007;
+            j++;
+            k--;
+        } else if (sum < nums[i]) {
+            j++;
+        } else {
+            k--;
+        }
+    }
+
+
+    dp[i][s][e]= ans;
+    return ans;
+}
+int countOfPairs(vector<int>& nums) {
+
+    for(int i=0; i<=nums.size(); i++){
+        for(int j=0; j<=50; j++){
+            for(int k=0; k<=50; k++){
+                dp[i][j][k]=-1;
+            }
+        }
+    }
+
+    long ans = helper(0, nums, 0, 50);
+    return (int) (ans);
+}
+};
+
+//question 4
+class Solution {
+public:
+    int MOD = 1e9 + 7;
+
+    int countOfPairs(vector<int>& nums) {
+        int n = nums.size();
+        vector<int> arr1(n);
+        vector<int> arr2(n);
+        vector<vector<int>> dp(n, vector<int>(1001, 0));
+        for (int j = 0; j <= nums[0]; j++)
+            dp[0][j] = 1;
+        for (int i = 1; i < n; i++){
+            int ways = 0;
+            int k = 0;
+            for (int j = 0; j <= nums[i]; j++){
+                // problem I
+                // for (int j = 0; j <= nums[i]; j++){
+                //     int ways = 0;
+                //     for (int k = 0; k <= 50; k++){
+                //         if (k <= j && nums[i - 1] - k >= nums[i] - j)
+                //             ways = (ways + dp[i - 1][k]) % MOD;
+                //     }
+                //     dp[i][j] = ways;
+                // }
+                // problem II
+                if (k <= min(j, j - (nums[i] - nums[i - 1]))){
+                    ways = (ways + dp[i - 1][k]) % MOD;
+                    k++;
+                }
+                dp[i][j] = ways;
+            }
+        }
+        int res = 0;
+        for (int i = 0; i <= 1000; i++)
+            res = (res + dp[n - 1][i]) % MOD;
+        return res;
+    }
+};
